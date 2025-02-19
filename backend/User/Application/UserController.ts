@@ -1,18 +1,11 @@
 import { Request, Response } from "express";
-import User, { IUser} from "../../User/Domain/UserModel"
-import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
+import { UserService } from "../Domain/UserService";
 
 export class UserController {
-    private static JWT_SECRET = process.env.JWT_SECRET as string;
-
-    private static generateToken(userId: string):   string {
-        return jwt.sign({id: userId}, UserController.JWT_SECRET, {expiresIn: "1h"});
+    static async getAllUsers(req:Request, res:Response):Promise<Response>{
+        const search = req.query.search as string;
+        const excludedId = (req.user as any)? (req.user as any)._id : undefined;
+        const result = await UserService.getAllUsers(search, excludedId);
+        return res.status(result.status).json({message:result.message, users:result.users});
     }
-    
-    static async register(req: Request, res: Response): Promise<Response>{
-        try{
-                
-        }
-    }
-}
+}   

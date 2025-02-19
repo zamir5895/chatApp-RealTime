@@ -1,7 +1,6 @@
-import { use } from "passport";
 import { mongoose } from "../../db/db";
 
-const chatModel = new mongoose.Schema(
+const chatModel = new mongoose.Schema<any>(
     {
         chatName:{type:String, trim:true},
         isGroupChat:{type:Boolean, required:true},
@@ -20,5 +19,4 @@ const chatModel = new mongoose.Schema(
     {timestamps:true}
 );
 
-const Chat = mongoose.model('Chat', chatModel);
-module.exports = Chat;
+export default mongoose.model<any>('Chat', chatModel)

@@ -17,6 +17,25 @@ export class UserRepository {
         return user;
     }
 
-
-
+    static async getUserById(id:string):Promise<IUser | null>{
+        const user = await User.findById(id);
+        return user;
+    }
+    public static async getAllUsers(search?:string, excludedIds?:string):Promise<IUser[]>{
+        const keyword = search ? {
+            $or:[
+                {name:{$regex:search, $options:"i"}},
+                {email:{$regex:search, $options:"i"}}
+            ]
+        }:{};
+        const users = await User.find(keyword).find({_id:{ $ne:excludedIds}});
+        return users;
+    }
+    static async populateLatestMessage(chats:any){
+        const results = await User.populate(chats,{
+            path:"latestMessage.sender",
+            select:"name pic email",
+        });
+        return results;
+    }
 }
